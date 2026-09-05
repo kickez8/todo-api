@@ -1,0 +1,31 @@
+### 1. Регистрация нового пользователя
+POST http://localhost:8080/register
+Content-Type: application/json
+
+{
+    "username": "ivan",
+    "password": "my_secret_password"
+}
+
+###
+
+### 2. Создание новой задачи (напоминания)
+POST http://localhost:8080/tasks
+Authorization: Basic ivan my_secret_password
+Content-Type: application/json
+
+{
+    "title": "Купить молоко и хлеб"
+}
+
+###
+
+### 3. Получение списка всех задач пользователя
+GET http://localhost:8080/tasks
+Authorization: Basic ivan my_secret_password
+
+###
+
+### 4. Удаление задачи (наша новая фишка!)
+DELETE http://localhost:8080/tasks?id=1
+Authorization: Basic ivan my_secret_password
