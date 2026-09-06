@@ -144,3 +144,52 @@ func TasksHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Метод не поддерживается", http.StatusMethodNotAllowed)
 	}
 }
+
+// 5. Обновление задачи (изменение статуса done)
+func UpdateTaskHandler(w http.ResponseWriter, r *http.Request) {
+	// Проверяем авторизацию
+	userID, authorized := authenticate(r)
+	if !authorized {
+		w.Header().Set("WWW-Authenticate", `Basic realm="Restricted"`)
+		http.Error(w, "Неавторизован", http.StatusUnauthorized)
+		return
+	}
+
+	// Разрешаем только PUT
+	if r.Method != http.MethodPut {
+		http.Error(w, "Метод не поддерживается", http.StatusMethodNotAllowed)
+		return
+	}
+
+	// Получаем id задачи из query-параметра
+	taskID := r.URL.Query().Get("id")
+	if taskID == "" {
+		http.Error(w, "Не указан id задачи", http.StatusBadRequest)
+		return
+	}
+
+	// Парсим тело запроса
+	var t Task
+	err := json.NewDecoder(r.Body).Decode(&t)
+	if err != nil {
+		http.Error(w, "Неверное тело запроса", http.StatusBadRequest)
+		return
+	}
+
+	// Обновляем задачу (только done, title не меняем)
+	result, err := DB.Exec("UPDATE tasks SET done = $1 WHERE id = $2 AND user_id = $3",
+		t.Done, taskID, userID)
+	if err != nil {
+		http.Error(w, "Ошибка обновления", http.StatusInternalServerError)
+		return
+	}
+
+	// Проверяем, обновилась ли хоть одна строка
+	rowsAffected, _ := result.RowsAffected()
+	if rowsAffected == 0 {
+		http.Error(w, "Задача не найдена или нет доступа", http.StatusNotFound)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+}

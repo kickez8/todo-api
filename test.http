@@ -4,28 +4,50 @@ Content-Type: application/json
 
 {
     "username": "ivan",
-    "password": "my_secret_password"
+    "password": "123"
 }
 
 ###
 
-### 2. Создание новой задачи (напоминания)
+### 2. Создание новой задачи
 POST http://localhost:8080/tasks
-Authorization: Basic ivan my_secret_password
+Authorization: Basic artem my_secret_password
 Content-Type: application/json
 
 {
-    "title": "Купить молоко и хлеб"
+    "title": "Попрыгать"
 }
 
 ###
 
 ### 3. Получение списка всех задач пользователя
 GET http://localhost:8080/tasks
-Authorization: Basic ivan my_secret_password
+Authorization: Basic artem my_secret_password
 
 ###
 
-### 4. Удаление задачи (наша новая фишка!)
+### 4. Удаление задачи
 DELETE http://localhost:8080/tasks?id=1
-Authorization: Basic ivan my_secret_password
+Authorization: Basic ivan 123
+
+###
+
+### 5. Обновить задачу (пометить выполненной)
+PUT http://localhost:8080/tasks/update?id=7
+Authorization: Basic artem my_secret_password
+Content-Type: application/json
+
+{
+    "done": true
+}
+
+###
+
+### 6. Отметить как невыполненную
+PUT http://localhost:8080/tasks/update?id=1
+Authorization: Basic ivan 123
+Content-Type: application/json
+
+{
+    "done": false
+}

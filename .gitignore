@@ -1,0 +1,29 @@
+# Зависимости
+vendor/
+
+# Файлы окружения (пароли)
+.env
+.env.local
+
+# Скомпилированные бинарники
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+todo-api
+todo-api.exe
+
+# Отладочные файлы
+*.log
+*.tmp
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Системные файлы
+.DS_Store
+Thumbs.db
